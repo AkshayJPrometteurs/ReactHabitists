@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import WebAppLayout from '../../layouts/WebAppLayout';
-import Axios from '../../components/Axios';
+import WebAppLayout from '../layouts/WebAppLayout';
+import Axios from '../components/Axios';
 import { Button } from 'primereact/button';
 import { FaCirclePlus } from "react-icons/fa6";
 import { Divider } from 'primereact/divider';
@@ -10,7 +10,7 @@ import { HiEye } from "react-icons/hi";
 import { Chart } from 'primereact/chart';
 import moment from 'moment';
 import { Skeleton } from 'primereact/skeleton';
-import NoData from '../../components/NoData';
+import NoData from '../components/NoData';
 
 const Dashboard = () => {
     const { user } = useSelector((state) => state.auth);
@@ -39,7 +39,7 @@ const Dashboard = () => {
     const getInsightsDetails = async() =>{
         setInsightsLoading(true);
         try {
-            const response = await Axios.get('your_insights_for_week', { params: { user_id: user ? user.id : null, week_start : moment().startOf('week').format('YYYY-MM-DD'), week_end : moment().endOf('week').format('YYYY-MM-DD') } });
+            const response = await Axios.get('your_insights_for_week', { params: { user_id: user.id, week_start : moment().startOf('week').format('YYYY-MM-DD'), week_end : moment().endOf('week').format('YYYY-MM-DD') } });
             if(response.data.status === 200){
                 setInsightsLoading(false);
                 if(response.data?.data?.your_insights_week?.completed_tasks && response.data?.data?.your_insights_week?.not_completed_tasks && response.data?.data?.your_insights_week?.rescheduled_tasks && response.data?.data?.your_insights_week?.cancelled_tasks){ setInsightsData(false); }
@@ -65,10 +65,15 @@ const Dashboard = () => {
             }
         } catch (error) { console.error(error) }
     }
+    useEffect(()=>{
+        if(user){
+            getDashboardDetails();
+            getInsightsDetails();
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(()=>{ getDashboardDetails(); getInsightsDetails(); },[user])
+    },[user])
     return (
-        <WebAppLayout>
+        <WebAppLayout pageTitle={'Dashboard'}>
             {tasksLoader ? <Skeleton height='100px' /> : (
                 <section className='bg-primaryColor py-3 px-5 rounded-lg text-white shadow-md mb-4'>
                     <p className='md:text-base'>{dashboardDate}</p>

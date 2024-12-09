@@ -5,17 +5,15 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { signin } from '../../../redux/slices/authSlice';
+import { signin } from '../../redux/slices/authSlice';
 import { Checkbox } from 'primereact/checkbox';
 import { Message } from 'primereact/message';
-import GuestLayout from '../../../layouts/GuestLayout';
-import ErrorValidation from '../../../components/ErrorValidation';
-import { useServiceContext } from '../../../context/ContextProvider';
+import GuestLayout from '../../layouts/GuestLayout';
+import ErrorValidation from '../../components/ErrorValidation';
 
 const SignIn = () => {
     const dispatch = useDispatch();
     const { error, loading } = useSelector((state) => state.auth);
-    const { showToast } = useServiceContext();
     return (
         <GuestLayout leftPanelImgURL="assets/images/signin.svg" pageTitle="Sign In">
             <div className='md:w-2/3 m-auto'>
@@ -34,9 +32,6 @@ const SignIn = () => {
                     onSubmit={ (values) => {
                         const formData = {...values, auth_type :'manual'};
                         dispatch(signin(formData))
-                        .then((action) => {
-                            if(signin.fulfilled.match(action)) { showToast('success', action.payload.message); }
-                        })
                     }}
                 >
                 {({values,errors,touched,handleChange,handleBlur,handleSubmit}) => (

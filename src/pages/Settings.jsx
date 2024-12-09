@@ -1,24 +1,21 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import WebAppLayout from '../../layouts/WebAppLayout';
+import WebAppLayout from '../layouts/WebAppLayout';
 import { Button } from 'primereact/button';
-import Axios from '../../components/Axios';
-import { useServiceContext } from '../../context/ContextProvider';
+import Axios from '../components/Axios';
 import { TabMenu } from 'primereact/tabmenu';
 import { InputTextarea } from "primereact/inputtextarea";
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import ErrorValidation from '../../components/ErrorValidation';
+import ErrorValidation from '../components/ErrorValidation';
 import { FaRegSave } from "react-icons/fa";
 import { Skeleton } from 'primereact/skeleton';
-import NoData from '../../components/NoData';
+import NoData from '../components/NoData';
+import { toast } from 'react-toastify';
 
 const Settings = () => {
-    const { showToast } = useServiceContext();
     const { user } = useSelector((state) => state.auth);
-
     const [settingsActiveIndex, setSettingsActiveIndex] = useState(0);
     const settingsTabMenus = [{ label: 'Blocked Users' },{ label: 'App Feedback' },{ label: 'Privacy Policy' },{ label: 'Terms and Conditions' },{ label: 'Help' }];
-
     const [blockedUserList, setBlockedUserList] = useState([]);
     const [blockedUserListLoading, setBlockedUserListLoading] = useState(true);
     const getBlockedUserList = async() => {
@@ -40,7 +37,7 @@ const Settings = () => {
         setUserUnblockLoading(true)
         try {
             const response = await Axios.post('user_unblock', { user_id : user_id, friend_user_id : friend_user_id });
-            if(response.data.status === 200){ getBlockedUserList(); showToast('success', response.data.message); }
+            if(response.data.status === 200){ getBlockedUserList(); toast.success(response.data.message,{closeButton : false, draggable : false, autoClose : 3000}); }
             setUserUnblockLoading(false);
         } catch (error) { console.log(error); setUserUnblockLoading(false); }
     }
@@ -53,7 +50,7 @@ const Settings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(()=>{ getBlockedUserList(); },[user])
     return (
-        <WebAppLayout>
+        <WebAppLayout pageTitle={'Settings'}>
             <section className='p-4 shadow-lg rounded-lg border'>
                 <div>
                     <TabMenu className='settings-tab-menus text-lg' model={settingsTabMenus} activeIndex={settingsActiveIndex} onTabChange={tabMenuHandleChange} />
@@ -91,7 +88,7 @@ const Settings = () => {
                                     }}
                                     onSubmit={ (values, {setSubmitting}) => {
                                         Axios.post('app_feedback', values).then((response) => {
-                                            if(response.data.status === 200){ showToast('success', response.data.message); setSubmitting(false); }
+                                            if(response.data.status === 200){ toast.success(response.data.message,{closeButton : false, draggable : false, autoClose : 3000}); setSubmitting(false); }
                                         }).catch((error) => { console.log(error); setSubmitting(false); });
                                     }}
                                 >

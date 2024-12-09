@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "../../components/Axios";
+import { toast } from "react-toastify";
 
 export const signup = createAsyncThunk('auth/signup',
     async (data, { rejectWithValue }) => {
@@ -22,7 +23,7 @@ export const signin = createAsyncThunk('auth/signin',
     }
 )
 
-const initialState = { user : null, token : localStorage.getItem('ACCESS_TOKEN') || null, error : null, loading : false, toastMessage: null, }
+const initialState = { user : null, token : localStorage.getItem('ACCESS_TOKEN') || null, error : null, loading : false }
 
 const authSlice = createSlice({ name : 'auth', initialState, reducers: {},
     extraReducers : (builder) => {
@@ -34,7 +35,7 @@ const authSlice = createSlice({ name : 'auth', initialState, reducers: {},
             localStorage.setItem('ACCESS_TOKEN', action.payload.data.token)
             state.user = action.payload.data.user;
             localStorage.removeItem('splashQues');
-            state.toastMessage = {type: 'success', message: 'Sign-Up Successfully!'};
+            toast.success("Sign-Up Successfully!",{closeButton : false, autoClose: 3000,draggable: false});
         });
         builder.addCase(signup.rejected, (state, action) => { state.loading = false; state.error = action.payload.errors; });
 
@@ -53,7 +54,7 @@ const authSlice = createSlice({ name : 'auth', initialState, reducers: {},
                 localStorage.setItem('ACCESS_TOKEN', token);
                 state.user = user;
                 localStorage.removeItem('splashQues');
-                state.toastMessage = {type: 'success', message: 'Sign-In Successfully!'};
+                toast.success("Sign-In Successfully!",{closeButton : false, autoClose: 3000,draggable: false});
             } else { state.error = action.payload.message }
         });
         builder.addCase(signin.rejected, (state, action) => { state.loading = false; state.error = action.payload.errors; });

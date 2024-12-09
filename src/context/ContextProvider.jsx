@@ -1,17 +1,14 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "../redux/slices/authSlice";
-import { Toast } from 'primereact/toast';
-import Loader from "../pages/webapp/Loader";
+import Loader from "../components/Loader";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ContextData = createContext();
 export const ServiceContext = ({ children }) => {
     const dispatch = useDispatch();
-    const toastRef = useRef(null);
     const [loading, setLoading] = useState(false);
-    const showToast = (severity, summary, detail) => {
-        toastRef.current?.show({ severity, summary, detail });
-    };
 
     useEffect(() => {
         const token = localStorage.getItem('ACCESS_TOKEN');
@@ -22,9 +19,9 @@ export const ServiceContext = ({ children }) => {
     }, [dispatch]);
 
     return (
-        <ContextData.Provider value={{ showToast }}>
-            <Toast ref={toastRef} />
+        <ContextData.Provider value={{  }}>
             {loading ? <Loader /> : children}
+            <ToastContainer />
         </ContextData.Provider>
     );
 };

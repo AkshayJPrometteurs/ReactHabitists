@@ -8,9 +8,9 @@ import { Password } from 'primereact/password';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { signup } from '../../../redux/slices/authSlice';
-import GuestLayout from '../../../layouts/GuestLayout';
-import ErrorValidation from '../../../components/ErrorValidation';
+import { signup } from '../../redux/slices/authSlice';
+import GuestLayout from '../../layouts/GuestLayout';
+import ErrorValidation from '../../components/ErrorValidation';
 
 const SignUp = () => {
     const genderOptions = [{ name: 'Male', code: 'male' },{ name: 'Female', code: 'female' },{ name: 'Other', code: 'other' }];

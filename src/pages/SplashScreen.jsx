@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Link, useNavigate } from 'react-router-dom';
-import Axios from '../../components/Axios';
+import Axios from '../components/Axios';
 import { Button } from 'primereact/button';
-import GuestLayout from '../../layouts/GuestLayout';
+import GuestLayout from '../layouts/GuestLayout';
 
 const SplashScreen = () => {
     const [splashQues, setSplashQues] = useState([]);
