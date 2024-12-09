@@ -1,20 +1,32 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import Axios from "../components/Axios";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../redux/slices/authSlice";
+import { Toast } from 'primereact/toast';
+import Loader from "../pages/webapp/Loader";
 
-const ContextData = createContext({ authData : {}, setAuthData : () => {} });
+const ContextData = createContext();
+export const ServiceContext = ({ children }) => {
+    const dispatch = useDispatch();
+    const toastRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const showToast = (severity, summary, detail) => {
+        toastRef.current?.show({ severity, summary, detail });
+    };
 
-export const ServiceContext = ({children}) => {
-    const [authData, setAuthData] = useState([]);
-    const token = localStorage.getItem('ACCESS_TOKEN');
-    useEffect(()=>{
-        if(token){
-            Axios.get('/user')
-            .then((res)=>{ setAuthData(res.data.data.user); })
-            .catch((err)=>{ console.log(err) })
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
-    return( <ContextData.Provider value={{ authData }}>{children}</ContextData.Provider> )
-}
+    useEffect(() => {
+        const token = localStorage.getItem('ACCESS_TOKEN');
+        if (token) {
+            setLoading(true)
+            dispatch(fetchUser()).finally(() => setLoading(false));
+        } else { setLoading(false); }
+    }, [dispatch]);
+
+    return (
+        <ContextData.Provider value={{ showToast }}>
+            <Toast ref={toastRef} />
+            {loading ? <Loader /> : children}
+        </ContextData.Provider>
+    );
+};
 
 export const useServiceContext = () => useContext(ContextData);
