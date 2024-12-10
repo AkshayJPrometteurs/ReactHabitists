@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "../redux/slices/authSlice";
 import Loader from "../components/Loader";
@@ -9,7 +9,6 @@ const ContextData = createContext();
 export const ServiceContext = ({ children }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         const token = localStorage.getItem('ACCESS_TOKEN');
         if (token) {

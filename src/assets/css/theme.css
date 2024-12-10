@@ -3202,6 +3202,7 @@
         background-color: transparent;
         color: #ef4444;
         border-color: transparent;
+        padding: 0.2rem 0.4rem;
     }
 
     .p-button.p-button-danger.p-button-text:not(:disabled):hover,
@@ -5682,7 +5683,7 @@
     }
 
     .p-scrollpanel .p-scrollpanel-bar {
-        background: #f9fafb;
+        background: #888;
         border: 0 none;
     }
 
@@ -8651,6 +8652,29 @@
 
 .journal-files-upload .p-fileupload-row > div{
     padding: 0 0.75rem;
+}
+
+.loaderDivider.p-divider.p-divider-horizontal:before{
+    border-top: 1px #000;
+    border-top-style : solid;
+}
+
+.tox .tox-tbtn{
+    margin: 1px 2px 1px 0!important;
+}
+
+.tox .tox-tbtn--active, .tox .tox-tbtn--enabled, .tox .tox-tbtn--enabled:focus, .tox .tox-tbtn--enabled:hover{
+    background-color: var(--primary-color)!important;
+    color: #fff!important;
+}
+
+.tox .tox-tbtn--active svg, .tox .tox-tbtn--enabled svg, .tox .tox-tbtn--enabled:focus svg, .tox .tox-tbtn--enabled:hover svg{
+    fill: #fff!important;
+}
+
+.tox .tox-edit-area::before{
+    border: 1px solid var(--primary-color)!important;
+    border-radius: 10px!important;
 }
 
 @media screen and (max-width: 767px) {

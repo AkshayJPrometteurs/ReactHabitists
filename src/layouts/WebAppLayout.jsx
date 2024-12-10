@@ -35,7 +35,7 @@ const WebAppLayout = ({children, pageTitle}) => {
     );
     const end = (
         <div className="flex items-center gap-5">
-            <Button icon="pi pi-bell" size='large' severity="success" onClick={() => setNotificationSidebarToggle(true)} className='bg-primaryColor border-primaryColor' aria-label="notification" rounded />
+            <Button icon="pi pi-bell" size='large' severity="success" onClick={() => setNotificationSidebarToggle(true)} className='bg-primaryColor border-primaryColor px-2.5 py-2' aria-label="notification" rounded />
             <Button icon="pi pi-power-off" style={{ fontWeight : '500' }} label='Sign Out' severity="danger" onClick={() => setSignOutModal(true)} aria-label="logout" />
             <NotificationPanel notificationSidebarToggle={notificationSidebarToggle} setNotificationSidebarToggle={setNotificationSidebarToggle}/>
             <Modal header="Confirmation" closable={false} headerClassName='text-center' visible={signOutModal}>
