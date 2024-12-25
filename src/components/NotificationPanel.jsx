@@ -1,112 +1,118 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { Sidebar } from 'primereact/sidebar';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Drawer, Typography, Divider, Button, CircularProgress, Box } from '@mui/material';
+import { FaCalendarCheck } from "react-icons/fa6";
 import Axios from './Axios';
 import { useSelector } from 'react-redux';
-import { FaCalendarCheck } from "react-icons/fa6";
-import { Divider } from 'primereact/divider';
-import { Button } from 'primereact/button';
-import { Skeleton } from 'primereact/skeleton';
 import NoData from './NoData';
 
-const NotificationPanel = ({notificationSidebarToggle, setNotificationSidebarToggle}) => {
+const NotificationPanel = ({ notificationSidebarToggle, setNotificationSidebarToggle }) => {
     const { user } = useSelector((state) => state.auth);
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoading, setNotificationsLoading] = useState(true);
-    const getNotificationsData = async() => {
-        try{
-            const response = await Axios.get('/notification_list',{ params : { user_id : user.id } });
-            setNotifications(response.data.data.notifications)
-            setNotificationsLoading(false)
-        }catch(error){ console.log(error); setNotificationsLoading(false); }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { if(user){ getNotificationsData(); } },[user])
-    return (
-        <Sidebar className='w-96' header={<h1 className='font-bold text-lg'>Notifications</h1>} visible={notificationSidebarToggle} position="right" onHide={() => setNotificationSidebarToggle(false)}>
-            {notificationsLoading ? (
-                <Fragment>
-                    <Skeleton height='150px' className='mb-3'/>
-                    <Skeleton height='150px' className='mb-3'/>
-                    <Skeleton height='150px' className='mb-3'/>
-                    <Skeleton height='150px' className='mb-3'/>
-                    <Skeleton height='150px' className='mb-3'/>
-                </Fragment>
-            ) : (
-                <Fragment>
-                    {notifications.length > 0 ? (
-                        notifications.map((notification) => { return(
-                            <Fragment key={notification.id}>
-                                {notification?.notification_type === 'task_of_the_day' && notification?.task_desc && (
-                                    <div className='border-gray-200 border-[1px] shadow-md rounded-md p-3 mb-3'>
-                                        <div className='flex gap-3'>
-                                            <FaCalendarCheck size={18} className='text-primaryColor' />
-                                            <p className='uppercase font-semibold'>{notification?.task_title}</p>
-                                        </div>
-                                        <Divider/>
-                                        <p>{notification?.task_desc}</p>
-                                        <Divider className='mb-2'/>
-                                        <p className='text-xs text-gray-500 text-center'>{notification?.task_time}</p>
-                                    </div>
-                                )}
-                                {notification?.notification_type === 'challenge' && notification?.task_desc && (
-                                    <div className='border-gray-200 border-[1px] shadow-md rounded-md p-3 mb-3'>
-                                        <div className='flex gap-3'>
-                                            <FaCalendarCheck size={18} className='text-primaryColor' />
-                                            <p className='uppercase font-semibold'>Challenge</p>
-                                        </div>
-                                        <Divider/>
-                                        <p>{notification?.task_desc}</p>
-                                        <Divider className='mb-2'/>
-                                        <p className='text-xs text-gray-500 text-center'>{notification?.task_time}</p>
-                                    </div>
-                                )}
-                                {notification?.notification_type === 'member_add' && notification?.notification_status === 'accepted' && notification?.description && (
-                                    <div className='border-gray-200 border-[1px] shadow-md rounded-md p-3 mb-3'>
-                                        <div className='flex gap-3'>
-                                            <FaCalendarCheck size={18} className='text-primaryColor' />
-                                            <p className='uppercase font-semibold'>{notification?.title}</p>
-                                        </div>
-                                        <Divider/>
-                                        <p>{notification?.description}</p>
-                                        <Divider className='mb-2'/>
-                                        <p className='text-xs text-gray-500 text-center'>{notification?.date_time}</p>
-                                    </div>
-                                )}
-                                {notification?.notification_type === 'member_add' && notification?.notification_status === 'rejected' && notification?.description && (
-                                    <div className='border-gray-200 border-[1px] shadow-md rounded-md p-3 mb-3'>
-                                        <div className='flex gap-3'>
-                                            <FaCalendarCheck size={18} className='text-primaryColor' />
-                                            <p className='uppercase font-semibold'>{notification?.title}</p>
-                                        </div>
-                                        <Divider/>
-                                        <p>{notification?.description}</p>
-                                        <Divider className='mb-2'/>
-                                        <p className='text-xs text-gray-500 text-center'>{notification?.date_time}</p>
-                                    </div>
-                                )}
-                                {notification?.notification_type === 'member_add' && notification?.notification_status === 'requested' && notification?.description && (
-                                    <div className='border-gray-200 border-[1px] shadow-md rounded-md p-3 mb-3'>
-                                        <div className='flex gap-3'>
-                                            <FaCalendarCheck size={18} className='text-primaryColor' />
-                                            <p className='uppercase font-semibold'>{notification?.title}</p>
-                                        </div>
-                                        <Divider/>
-                                        <p>{notification?.description}</p>
-                                        <div className='flex justify-center items-center gap-4 mt-3'>
-                                            <Button label='Accept' severity='success' className='bg-primaryColor text-xs border-primaryColor px-2 py-1.5'/>
-                                            <Button label='Reject' severity='danger' className='px-2 py-1.5 text-xs'/>
-                                        </div>
-                                        <Divider className='mb-2'/>
-                                        <p className='text-xs text-gray-500 text-center'>{notification?.date_time}</p>
-                                    </div>
-                                )}
-                            </Fragment>
-                        )})
-                    ) : <NoData/> }
-                </Fragment>
-            )}
-        </Sidebar>
-    )
-}
 
-export default NotificationPanel
+    const getNotificationsData = async () => {
+        try {
+            const response = await Axios.get('/notification_list', { params: { user_id: user.id } });
+            setNotifications(response.data.data.notifications);
+            setNotificationsLoading(false);
+        } catch (error) {
+            console.log(error);
+            setNotificationsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            getNotificationsData();
+        }
+    }, [user]);
+
+    return (
+        <Drawer
+            anchor="right"
+            open={notificationSidebarToggle}
+            onClose={() => setNotificationSidebarToggle(false)}
+            PaperProps={{
+                sx: { width: '24rem' }
+            }}
+        >
+            <Box p={2}>
+                <Typography variant="h6" fontWeight="bold">
+                    Notifications
+                </Typography>
+            </Box>
+            <Divider />
+
+            <Box p={2} overflow="auto" flex={1}>
+                {notificationsLoading ? (
+                    <Fragment>
+                        {[...Array(5)].map((_, index) => (
+                            <Box key={index} mb={2} display="flex" flexDirection="column" gap={2}>
+                                <CircularProgress size={24} />
+                                <Divider />
+                            </Box>
+                        ))}
+                    </Fragment>
+                ) : notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                        <Box
+                            key={notification.id}
+                            border={1}
+                            borderColor="grey.300"
+                            borderRadius={2}
+                            p={2}
+                            mb={2}
+                            boxShadow={1}
+                        >
+                            <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                <FaCalendarCheck size={18} style={{ color: '#3f51b5' }} />
+                                <Typography variant="body1" fontWeight="bold">
+                                    {notification?.task_title || notification?.title || 'Notification'}
+                                </Typography>
+                            </Box>
+                            <Divider />
+                            <Typography variant="body2" mt={1} mb={2}>
+                                {notification?.task_desc || notification?.description}
+                            </Typography>
+                            <Divider />
+                            {notification?.notification_type === 'member_add' &&
+                                notification?.notification_status === 'requested' && (
+                                    <Box display="flex" justifyContent="center" gap={2} mt={2}>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            color="success"
+                                            sx={{ fontSize: '0.75rem' }}
+                                        >
+                                            Accept
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            color="error"
+                                            sx={{ fontSize: '0.75rem' }}
+                                        >
+                                            Reject
+                                        </Button>
+                                    </Box>
+                                )}
+                            <Typography
+                                variant="caption"
+                                display="block"
+                                color="textSecondary"
+                                align="center"
+                                mt={2}
+                            >
+                                {notification?.task_time || notification?.date_time || 'Time not available'}
+                            </Typography>
+                        </Box>
+                    ))
+                ) : (
+                    <NoData />
+                )}
+            </Box>
+        </Drawer>
+    );
+};
+
+export default NotificationPanel;

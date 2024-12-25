@@ -1,5 +1,4 @@
-import { Button } from 'primereact/button'
-import { Divider } from 'primereact/divider'
+import { Button, Divider } from '@mui/material'
 import React from 'react'
 
 const Loader = () => {

@@ -1,53 +1,82 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButton } from 'primereact/togglebutton';
+import { Button, ToggleButtonGroup, ToggleButton, Typography, Box, useTheme } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import Axios from '../components/Axios';
-import { Button } from 'primereact/button';
 import GuestLayout from '../layouts/GuestLayout';
 
 const SplashScreen = () => {
-    const [splashQues, setSplashQues] = useState([]);
-    const [selectedQuesIds, setSelectedQuesIds] = useState([]);
-    const [splashQuesShow, setSplashQuesShow] = useState(false);
+    const theme = useTheme();
+    const [splashScreenQuestions, setSplashScreenQuestions] = useState([]);
+    const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
+    const [showSplashQuestions, setShowSplashQuestions] = useState(false);
     const navigate = useNavigate();
+
     const getSplashQues = async () => {
         try {
             const res = await Axios.get('/splash_screen_questions');
-            setSplashQues(res.data.data.questions);
+            setSplashScreenQuestions(res.data.data.questions);
         } catch (err) { console.error(err); }
-    }
-    const handleToggleChange = (optionId) => {
-        setSelectedQuesIds(prevSelectedIds => {
-            if (prevSelectedIds.includes(optionId)) { return prevSelectedIds.filter(id => id !== optionId);
-            } else { return [...prevSelectedIds, optionId]; }
+    };
+
+    const handleToggleChange = (optionId,optionSlug) => {
+        setSelectedQuestionIds(prevSelectedIds => {
+            if (optionSlug === "none-of-this") {
+                if (prevSelectedIds.includes(optionId)) { return prevSelectedIds.filter(id => id !== optionId);
+                } else { return [optionId]; }
+            } else {
+                if (prevSelectedIds.includes(optionId)) { return prevSelectedIds.filter(id => id !== optionId);
+                } else {
+                    return prevSelectedIds.filter(id => splashScreenQuestions.find(question => question.questions_slug === "none-of-this").id !== id).concat(optionId);
+                }
+            }
         });
     };
-    const handleSplashHelloButton = () => { setSplashQuesShow(true); }
-    const handleSplashDoneBtn = () => { navigate('/sign-up') }
-    useEffect(() => { getSplashQues(); }, []);
-    useEffect(() => { localStorage.setItem('splashQues', selectedQuesIds); }, [selectedQuesIds]);
-    return (
-        <GuestLayout pageTitle="" leftPanelImgURL="assets/images/splashScreen.svg">
-            <div className={`md:px-28 p-5 my-auto ${splashQuesShow ? 'block' : 'hidden'}`}>
-                <p className='text-lg m-2 font-extrabold'>Can you relate?</p>
-                <div className='overflow-y-auto'>
-                    {splashQues.length > 0 ? (
-                        splashQues.map(option => (
-                            <ToggleButton key={option.id} checked={selectedQuesIds.includes(option.id)} onChange={() => handleToggleChange(option.id, option.questions)} onLabel={option.questions} offLabel={option.questions} className='m-2 splashQuesTogggle' />
-                        ))
-                    ) : ( <p>Loading options...</p> )}
-                </div>
-                <Button disabled={selectedQuesIds.length > 0 ? false : true} onClick={handleSplashDoneBtn} className='bg-black rounded-xl w-full py-2.5 mt-8 flex justify-center gap-2 items-center border-0'>Done</Button>
-            </div>
-            <div className={`md:px-28 p-5 text-gray-400 my-auto ${splashQuesShow ? 'hidden' : 'block'}`}>
-                <p className='text-black font-bold pt-3 text-xl'>Make your life simple!</p>
-                <p className='py-4 text-base'>Unlock a world of possibilities and reclaim your valuable time. <strong className='text-black font-bold'>Habitist</strong> uses behavioral science to simplify your life and make every moment more enjoyable.</p>
-                <p className='text-base'>Let's embark on this transformative journey together and discover a better way to live, work, and thrive!</p>
-                <button onClick={handleSplashHelloButton} className='bg-black rounded-xl text-white w-full py-2 mt-8 flex justify-center gap-2 items-center cursor-pointer'>Hello <img src="assets/images/hand.svg" alt="hand" /></button>
-            </div>
-            <p className='p-4 text-center'>Already have an account? <Link className='text-primaryColor font-bold' to={'/sign-in'}>Sign-In</Link></p>
-        </GuestLayout>
-    )
-}
 
-export default SplashScreen
+    const handleSplashHelloButton = () => { setShowSplashQuestions(true); };
+    const handleSplashDoneBtn = () => { navigate('/sign-up'); };
+    useEffect(() => { getSplashQues(); }, []);
+    useEffect(() => { localStorage.setItem('splashQues', JSON.stringify(selectedQuestionIds)); }, [selectedQuestionIds]);
+
+    return (
+        <GuestLayout pageTitle="Splash Screen" leftPanelImgURL="assets/images/splashScreen.svg">
+            <Box sx={{ px: { md: 7 }, p: 2, my: 'auto', display: showSplashQuestions ? 'block' : 'none' }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Can you relate?</Typography>
+                <Box sx={{ overflowY: 'auto', maxHeight: '400px' }}>
+                    {splashScreenQuestions.length > 0 ? (
+                        splashScreenQuestions.map((option) => (
+                            <ToggleButtonGroup key={option.id} value={selectedQuestionIds} onChange={() => handleToggleChange(option.id, option.questions_slug)} exclusive>
+                                <ToggleButton value={option.id}
+                                    sx={{ borderRadius: 2, m: 1,
+                                        backgroundColor: selectedQuestionIds.includes(option.id) ? `${theme.palette.primary.main} !important` : 'white !important',
+                                        color : selectedQuestionIds.includes(option.id) ? `#fff !important` : '#000 !important',
+                                    }}
+                                >
+                                    {option.questions}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        ))
+                    ) : ( <Typography>Loading options...</Typography> )}
+                </Box>
+                <Button size='large' fullWidth onClick={handleSplashDoneBtn} variant="contained" color="primary" disabled={selectedQuestionIds.length > 0 ? false : true} sx={{ mt: 4 }}>Done</Button>
+            </Box>
+            <Box sx={{ px: { md: 7 }, p: 2, color: 'gray', my: 'auto', display: showSplashQuestions ? 'none' : 'block' }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black', pt: 1 }}>Make your life simple!</Typography>
+                <Typography sx={{ py: 2 }}>
+                    Unlock a world of possibilities and reclaim your valuable time.{' '}
+                    <strong style={{ fontWeight: 'bold', color: 'black' }}>Habitist</strong> uses behavioral science to
+                    simplify your life and make every moment more enjoyable.
+                </Typography>
+                <Typography>Let's embark on this transformative journey together and discover a better way to live, work, and thrive!</Typography>
+                <Button onClick={handleSplashHelloButton} variant="contained" color="primary" size='large' fullWidth sx={{ mt: 4 }}>
+                    Hello <img src="assets/images/hand.svg" alt="hand" />
+                </Button>
+            </Box>
+            <Typography sx={{ p: 2, textAlign: 'center' }}>
+                Already have an account?{' '}
+                <Link to="/sign-in" style={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>Sign-In</Link>
+            </Typography>
+        </GuestLayout>
+    );
+};
+
+export default SplashScreen;
