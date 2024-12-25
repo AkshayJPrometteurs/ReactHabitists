@@ -3,14 +3,11 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import WebAppLayout from '../layouts/WebAppLayout';
 import Axios from '../components/Axios';
-import { Button } from 'primereact/button';
 import { FaCirclePlus } from "react-icons/fa6";
-import { Divider } from 'primereact/divider';
 import { HiEye } from "react-icons/hi";
-import { Chart } from 'primereact/chart';
 import moment from 'moment';
-import { Skeleton } from 'primereact/skeleton';
 import NoData from '../components/NoData';
+import { Button, Divider, Skeleton } from '@mui/material';
 
 const Dashboard = () => {
     const { user } = useSelector((state) => state.auth);
@@ -129,7 +126,7 @@ const Dashboard = () => {
                     <div className='p-3 shadow-md rounded-lg border-[1px]'>
                         <h1 className='text-lg font-semibold text-center'>Your Insights</h1>
                         <Divider className='my-3' />
-                        {insightsData ? <NoData /> : <Chart type="doughnut" data={chartData} options={chartOptions} />}
+                        {/* {insightsData ? <NoData /> : <Chart type="doughnut" data={chartData} options={chartOptions} />} */}
                     </div>
                 )}
             </section>

@@ -1,26 +1,66 @@
 import React, { Fragment } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { Menubar } from 'primereact/menubar';
-import { Button } from 'primereact/button';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
 const LandingPageLayout = () => {
     document.title = process.env.REACT_APP_NAME;
-    const start = <img alt="logo" src="assets/images/landing-header-image.svg" className="mr-2 w-auto h-9"></img>;
-    const end = (
-        <div className="grid grid-cols-3 items-center text-center gap-2">
-            <Link to={'#'} className='font-bold'>Features</Link>
-            <Link to={'#'} className='font-bold'>Blogs</Link>
-            <Button className='inline-flex items-center justify-center px-3.5 pt-1.5 pb-2.5 text-sm sm:text-base font-semibold transition-all duration-200 text-white bg-[#F97E6D] rounded-lg' label="Submit" />
-        </div>
-    );
+
     return (
         <Fragment>
-            <Menubar model={[]} start={start} end={end} />
-            <section className='pt-12 sm:pt-18'>
-                <Outlet/>
+            {/* AppBar as Menubar */}
+            <AppBar position="static" color="transparent" elevation={0}>
+                <Toolbar sx={{ justifyContent: 'space-between' }}>
+                    {/* Logo */}
+                    <Box component="img" src="assets/images/landing-header-image.svg" alt="logo" sx={{ height: 36 }} />
+
+                    {/* Navigation and Action Buttons */}
+                    <Box display="flex" alignItems="center" gap={3}>
+                        <Typography
+                            component={Link}
+                            to="#"
+                            sx={{
+                                fontWeight: 'bold',
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                '&:hover': { color: 'primary.main' },
+                            }}
+                        >
+                            Features
+                        </Typography>
+                        <Typography
+                            component={Link}
+                            to="#"
+                            sx={{
+                                fontWeight: 'bold',
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                '&:hover': { color: 'primary.main' },
+                            }}
+                        >
+                            Blogs
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#F97E6D',
+                                textTransform: 'none',
+                                fontWeight: 'bold',
+                                padding: '6px 16px',
+                                '&:hover': { backgroundColor: '#f25b4a' },
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+
+            {/* Main Content Section */}
+            <section style={{ paddingTop: '3rem' }}>
+                <Outlet />
             </section>
         </Fragment>
-    )
-}
+    );
+};
 
-export default LandingPageLayout
+export default LandingPageLayout;

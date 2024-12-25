@@ -1,11 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { Rating } from 'primereact/rating';
 import Slider from 'react-slick';
 import axios from 'axios';
-import { Menubar } from 'primereact/menubar';
-import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Button } from '@mui/material';
 
 const LandingPage = () => {
     document.title = process.env.REACT_APP_NAME;
@@ -49,7 +47,7 @@ const LandingPage = () => {
 
     return (
         <Fragment>
-            <Menubar model={[]} start={start} end={end} />
+            {/* <Menubar model={[]} start={start} end={end} /> */}
             <section className='pt-12 sm:pt-18'>
                 <h1 className="text-3xl font-bold sm:text-5xl lg:text-6xl text-center mx-auto">Your future self is waiting for you to level up!</h1>
                 <p className="mt-8 text-sm text-black sm:text-lg lg:text-xl text-center mx-auto">Build lasting habits for you and your family. We simplify habit building with the proven <strong>Cue-Response-Reward</strong> formula. Unlock your full potential today.</p>
@@ -82,7 +80,7 @@ const LandingPage = () => {
                                 <Fragment key={index+1}>
                                     <div className="card border-2 border-black rounded-lg p-3 w-full h-52 overflow-hidden flex flex-col">
                                         <div className="flex items-center gap-2 mb-3">
-                                        <Rating value={data.rating} readOnly stars={5} cancel={false} />
+                                        {/* <Rating value={data.rating} readOnly stars={5} cancel={false} /> */}
                                         </div>
                                         <p className="text-base font-semibold text-black truncate">{data.title}</p>
                                         <p className="text-sm font-normal my-2 text-black overflow-hidden text-ellipsis h-16 line-clamp-3">{data.description}</p>

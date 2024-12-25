@@ -1,22 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import WebAppLayout from '../layouts/WebAppLayout';
-import { Divider } from 'primereact/divider';
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
-import { InputText } from "primereact/inputtext";
 import Axios from '../components/Axios';
 import { useSelector } from 'react-redux';
 import NoData from '../components/NoData';
-import { Skeleton } from 'primereact/skeleton';
 import { Formik } from 'formik';
-// import { InputTextarea } from 'primereact/inputtextarea';
-import { FileUpload } from 'primereact/fileupload';
-import { Button } from 'primereact/button';
 import ErrorValidation from '../components/ErrorValidation';
 import { FaMicrophoneAlt } from "react-icons/fa";
-import { ScrollPanel } from 'primereact/scrollpanel';
 import moment from 'moment';
 import { Editor } from '@tinymce/tinymce-react';
+import { Button, Divider, Skeleton, TextField } from '@mui/material';
 
 const Journals = () => {
     const { user } = useSelector((state) => state.auth);
@@ -37,10 +29,7 @@ const Journals = () => {
                 <div className='flex-1'>
                     <h1 className='text-center text-lg font-semibold uppercase'>Journals List</h1>
                     <Divider/>
-                    <IconField iconPosition="left">
-                        <InputIcon className="pi pi-search"> </InputIcon>
-                        <InputText className='w-full bg-gray-50' placeholder="Search" />
-                    </IconField>
+                    <TextField className='w-full bg-gray-50' placeholder="Search" />
                     <div>
                         {journalsListLoading ? (
                             <Fragment>
@@ -50,7 +39,7 @@ const Journals = () => {
                                 <Skeleton height='100px' className='my-3'/>
                             </Fragment>
                         ) : (
-                            <ScrollPanel style={{ width: '100%', height: '450px' }}>
+                            <div style={{ width: '100%', height: '450px' }}>
                                 {journalsList.length === 0 ? <NoData/> : (
                                     journalsList.map((journal) => {
                                         return(<div key={journal.id} className='bg-gray-50 border-[1px] shadow-md p-3 rounded-md my-3'>
@@ -63,7 +52,7 @@ const Journals = () => {
                                         </div>)
                                     })
                                 )}
-                            </ScrollPanel>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -91,7 +80,7 @@ const Journals = () => {
                         <form onSubmit={handleSubmit}>
                             <div className='mb-3'>
                                 <label htmlFor="title" className='font-semibold'>Title</label>
-                                <InputText keyfilter="alpha" invalid={(errors.title && touched.title) ? true : false} name='title' id='title' onChange={handleChange} onBlur={handleBlur} className='w-full mt-1' />
+                                <TextField keyfilter="alpha" invalid={(errors.title && touched.title) ? true : false} name='title' id='title' onChange={handleChange} onBlur={handleBlur} className='w-full mt-1' />
                                 <ErrorValidation errors={errors.title} touched={touched.title}/>
                             </div>
                             <div className='mb-3'>
@@ -116,7 +105,7 @@ const Journals = () => {
                                 <ErrorValidation errors={errors.description} touched={touched.description}/>
                             </div>
                             <div className='mb-3'>
-                                <FileUpload chooseOptions={{ icon: "pi pi-paperclip", className : 'px-10' }} className='journal-files-upload' chooseLabel='Attach file here' name="demo" url={'/api/upload'} accept="image/*" maxFileSize={1000000} onSelect={(e) => setFieldValue('attachment', e.files[0])} onRemove={()=>setFieldValue('attachment','')} emptyTemplate={<p className="m-0 text-center">Drag and drop files to here to upload.</p>} />
+                                {/* <FileUpload chooseOptions={{ icon: "pi pi-paperclip", className : 'px-10' }} className='journal-files-upload' chooseLabel='Attach file here' name="demo" url={'/api/upload'} accept="image/*" maxFileSize={1000000} onSelect={(e) => setFieldValue('attachment', e.files[0])} onRemove={()=>setFieldValue('attachment','')} emptyTemplate={<p className="m-0 text-center">Drag and drop files to here to upload.</p>} /> */}
                             </div>
                             <div className='flex gap-4'>
                                 <Button type='button' className='px-3 py-2 bg-secondaryColor border-secondaryColor' rounded icon={<FaMicrophoneAlt size={'1.1rem'} className='text-white'/>} />
